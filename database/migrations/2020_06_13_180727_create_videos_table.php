@@ -20,7 +20,9 @@ class CreateVideosTable extends Migration
             $table->string('path', 100)->unique();
             $table->string('title', 100);
             $table->text('description');
+            $table->boolean('public');
             $table->boolean('blocked');
+            $table->dateTime('uploadDate');
         });
     }
 
