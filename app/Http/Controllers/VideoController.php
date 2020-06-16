@@ -49,19 +49,26 @@ class VideoController extends Controller
         $rules = [
             'title' => 'required|min:3|max:200',
             'video' => 'required|mimes:mp4',
+            'thumbnail' => 'image|mimes:jpeg,png,jpg',
             'description' => 'max:1200',
             'public' => 'required',
         ];
         
         $this->validate($request, $rules);
-                 
+
+        
         $data['title'] = $request->title;
-        $data['description'] = $request->description;
+        if ($request->has('description') && !empty($request->description)) {
+            $data['description'] = $request->description;
+        } else {
+            $data['description'] = "";
+        }
         $data['public'] = boolval($request['public']);
         $data['blocked'] = false;
         $data['uploadDate'] = date('Y-m-d H:i:s');
         $data['owner'] = auth()->id();
         $data['path'] = '';
+        $data['thumbnailPath'] = '/uploads/thumbnails/0.jpg';
        
         $video = Video::create($data);
         $video->save();
@@ -70,8 +77,15 @@ class VideoController extends Controller
         $video = Video::find($id);
         
         $file = $request->file('video');
-        $file->move('uploads', $id.'.mp4');
-        $video->path = 'uploads/'.$id.'.mp4';
+        $file->move('uploads/videos/', $id.'.mp4');
+        $video->path = '/uploads/videos/'.$id.'.mp4';
+        
+        if ($request->exists('thumbnail')) {
+            $thumbnail = $request->file('thumbnail');
+            $thumbnail->move('uploads/thumbnails/', $id.'.'.$thumbnail->getClientOriginalExtension());
+            $video->thumbnailPath = '/uploads/thumbnails/'.$id.'.'.$thumbnail->getClientOriginalExtension();
+        }
+        
         $video->save();
         return view('video.show', ['video'=>$video]);
     }

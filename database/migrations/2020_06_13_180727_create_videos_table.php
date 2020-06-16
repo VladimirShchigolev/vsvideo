@@ -18,6 +18,7 @@ class CreateVideosTable extends Migration
             $table->timestamps();
             $table->integer('owner');
             $table->string('path', 100)->unique();
+            $table->string('thumbnailPath', 100);
             $table->string('title', 100);
             $table->text('description');
             $table->boolean('public');
