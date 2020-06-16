@@ -13,6 +13,9 @@
                 @if ($errors->has('video'))
                     <strong>{{ $errors->first('video') }}</strong><br>
                 @endif 
+                @if ($errors->has('thumbnail'))
+                    <strong>{{ $errors->first('thumbnail') }}</strong><br>
+                @endif 
                 @if ($errors->has('description'))
                     <strong>{{ $errors->first('description') }}</strong><br>
                 @endif
@@ -32,6 +35,10 @@
                 <div class="m-2">
                     <label for="video">Select the video to upload:</label>
                     <input class="form-control-file" type="file" name="video" id="video" required>
+                </div>
+                <div class="m-2">
+                    <label for="thumbnail">Select the thumbnail to upload:</label>
+                    <input class="form-control-file" type="file" name="thumbnail" id="thumbnail">
                 </div>
                 <div class="m-2">
                     <label for="description">Video description:</label>
