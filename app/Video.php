@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Video extends Model
 {
-    protected $fillable = ['owner', 'path', 'thumbnailPath', 'title', 'description', 'blocked', 'public', 'uploadDate'];
+    protected $fillable = ['owner_id', 'path', 'thumbnailPath', 'title', 'description', 'blocked', 'public', 'uploadDate'];
     
     public function owner() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'owner_id');
     }
     
     public function comments() {

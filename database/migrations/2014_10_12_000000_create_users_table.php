@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->timestamps();
             $table->boolean('isAdmin');
             $table->boolean('isBlocked');
+            $table->string('avatarPath', 100);
         });
     }
 

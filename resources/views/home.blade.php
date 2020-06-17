@@ -14,7 +14,13 @@
                         </div>
                     @endif
 
-                    You are logged in!
+                    @forelse($errors->all() as $error)
+                        <h1 class="has-error text-danger">{{ $error }}</h1>
+                    @empty
+                        <h4>Hello and welcome to the VSvideo, {{ Auth::user()->name }}</h4>
+                    @endforelse
+                    
+                    
                 </div>
             </div>
         </div>

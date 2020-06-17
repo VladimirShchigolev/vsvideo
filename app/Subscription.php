@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subscription extends Model
 {
-    protected $fillable = ['subscriber', 'author'];
+    protected $fillable = ['subscriber_id', 'author_id'];
     
     public function subscriber() {
-        return $this->belongsTo(User::class, 'subscriber');
+        return $this->belongsTo(User::class);
     }
     
     public function author() {
-        return $this->belongsTo(User::class, 'author');
+        return $this->belongsTo(User::class);
     }
 }
