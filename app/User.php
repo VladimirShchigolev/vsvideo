@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'isAdmin', 'isBlocked'
+        'name', 'email', 'password', 'isAdmin', 'isBlocked', 'avatarPath'
     ];
 
     /**
@@ -38,7 +38,7 @@ class User extends Authenticatable
     ];
     
     public function videos() {
-        return $this->hasMany(Video::class);
+        return $this->hasMany(Video::class, 'owner_id');
     }
     
     public function comments() {

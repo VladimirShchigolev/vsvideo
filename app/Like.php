@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Like extends Model
 {
-    protected $fillable = ['owner', 'video'];
+    protected $fillable = ['owner_id', 'video_id'];
     
     public function owner() {
         return $this->belongsTo(User::class);

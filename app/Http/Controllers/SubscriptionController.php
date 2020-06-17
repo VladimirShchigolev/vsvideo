@@ -2,15 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Like;
+use App\Subscription;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use function auth;
+use function response;
 
 class SubscriptionController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('BlockedUser');
+    }
+    
     public function index()
     {
         //
@@ -19,7 +31,7 @@ class SubscriptionController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -29,19 +41,38 @@ class SubscriptionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return Response
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'subscriber_id' => 'required|exists:User,id',
+            'author_id' => 'required|exists:User,id'
+        ];
+
+        $this->validate($request, $rules);
+        
+        if (! Subscription::where('subscriber_id', auth()->id())->where('author_id', $request->author_id)->exists() &&
+                auth()->id() != $request->author_id) {
+        
+            $data['subscriber_id'] = intval($request->subscriber_id);
+            $data['author_id'] = intval($request->author_id);
+
+            $subscription = Subscription::create($data);
+            $subscription->save();
+
+            return response()->json(['success' => 1], 200);
+        } else {
+            return response()->json(['success' => 0], 200);
+        }
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -52,7 +83,7 @@ class SubscriptionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
@@ -62,9 +93,9 @@ class SubscriptionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -75,10 +106,21 @@ class SubscriptionController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $rules = [
+            'subscriber_id' => 'required|exists:User,id',
+            'author_id' => 'required|exists:User,id'
+        ];
+
+        $this->validate($request, $rules);
+        
+        if (auth()->id() != $request->author_id) {
+            Subscription::where('subscriber_id', auth()->id())->where('author_id', $request->author_id)->delete();
+        }
+        
+        return response()->json(['success' => 1], 200);
     }
 }
