@@ -31,22 +31,32 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="collapse navbar-collapse col-12" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
+                    <ul class="navbar-nav mx-auto">
+                        <form action="{{ action('VideoController@search') }}" method="post">
+                            @csrf
+                            <div class="container">
+                                <div class="m-2  col-sm-9">
+                                    <input class="form-control" style="width:300px" type="text" id="search" name="search" required placeholder="{{ __('messages.Search') }}">
+                                </div>
+                                <input class="btn btn-primary col-sm" type="submit" value="{{ __('messages.Search') }}" name="submit">
+                            </div>
+                        </form>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
+                        <li><a class="nav-link" href="/lang/lv">LV</a></li>
+                        <li class="mr-3"><a class="nav-link" href="/lang/en">EN</a></li> 
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link" href="{{ route('login') }}">{{ __('messages.Login') }}</a>
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('messages.Register') }}</a>
                                 </li>
                             @endif
                         @else
@@ -56,11 +66,11 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ action('UserController@show', Auth::user()->id) }}">Profile</a>
+                                    <a class="dropdown-item" href="{{ action('UserController@show', Auth::user()->id) }}">{{ __('messages.Profile') }}</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('messages.Logout') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

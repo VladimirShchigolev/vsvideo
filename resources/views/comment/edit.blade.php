@@ -7,7 +7,7 @@
     {{ method_field('PATCH') }}
     @csrf
         <div class="card">
-            <h4 class="list-group-item m-0">Edit the comment</h4>
+            <h4 class="list-group-item m-0">{{ __('messages.Edit_the_comment') }}</h4>
 
             @if ($errors->any())
                 <div class="alert alert-danger mb-0">
@@ -21,18 +21,18 @@
 
             <div class="card-body">
                 <div class="m-2">
-                    <textarea class="form-control" id="text" name="text" rows="6" placeholder="Write your comment here!" required>{{ $comment->text }}</textarea>
+                    <textarea class="form-control" id="text" name="text" rows="6" placeholder="{{ __('messages.Write_your_comment_here') }}!" required>{{ $comment->text }}</textarea>
                 </div>
             </div>
         </div>
-    <input class="btn btn-primary col-sm my-1" type="submit" value="Save changes" name="submit">
+    <input class="btn btn-primary col-sm my-1" type="submit" value="{{ __('messages.Save_changes') }}" name="submit">
     </form>
     <a href = "{{ action('VideoController@show', $comment->video_id) }}">
-        <button class="btn btn-secondary col-sm my-1">Cancel</button>
+        <button class="btn btn-secondary col-sm my-1">{{ __('messages.Cancel') }}</button>
     </a>
     
     @else
-    <h5>Log in to leave a comment</h5>
+    <h5>{{ __('messages.Log_in_to_leave_a_comment') }}</h5>
     @endauth
 </div>
 @endsection

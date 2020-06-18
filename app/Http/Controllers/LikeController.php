@@ -20,7 +20,7 @@ class LikeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('BlockedUser');
+        $this->middleware('notBlockedUser');
     }
     
     public function index()
@@ -47,8 +47,8 @@ class LikeController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'owner_id' => 'required|exists:User,id',
-            'video_id' => 'required|exists:Video,id'
+            'owner_id' => 'required|exists:App\User,id',
+            'video_id' => 'required|exists:App\Video,id'
         ];
 
         $this->validate($request, $rules);
@@ -109,8 +109,8 @@ class LikeController extends Controller
     public function destroy(Request $request)
     {
         $rules = [
-            'owner_id' => 'required|exists:User,id',
-            'video_id' => 'required|exists:Video,id'
+            'owner_id' => 'required|exists:App\User,id',
+            'video_id' => 'required|exists:App\Video,id'
         ];
 
         $this->validate($request, $rules);

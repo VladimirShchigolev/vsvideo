@@ -10,7 +10,7 @@ $(document).ready(function () {
             data: { subscriber_id: {{ auth()->id() }}, author_id: {{ $user->id }}, _token: CSRF_TOKEN },
             success: function (data) {
                 if (data["success"] == 1) {
-                    $("#subscribe.btn-primary").text("Unsubscribe");
+                    $("#subscribe.btn-primary").text("{{ __('messages.Unsubscribe') }}");
                     $("#subscribe.btn-primary").toggleClass("btn-primary btn-secondary"); 
                     subscription_count = Number($("#subscription_count").text());
                     $("#subscription_count").text((subscription_count+1).toString(10));
@@ -30,7 +30,7 @@ $(document).ready(function () {
             data: { subscriber_id: {{ auth()->id() }}, author_id: {{ $user->id }}, _token: CSRF_TOKEN },
             success: function (data) {
                 if (data["success"] == 1) {
-                    $("#subscribe.btn-secondary").text("Subscribe");
+                    $("#subscribe.btn-secondary").text("{{ __('messages.Subscribe') }}");
                     $("#subscribe.btn-secondary").toggleClass("btn-primary btn-secondary"); 
                     subscription_count = Number($("#subscription_count").text());
                     $("#subscription_count").text((subscription_count-1).toString(10));
@@ -47,16 +47,16 @@ $(document).ready(function () {
 
 <div class="container">
     <div class="d-inline-block my-1 mr-2">
-        <h4 class="d-inline-block align-top">Subscribers:</h4> 
+        <h4 class="d-inline-block align-top">{{ __('messages.Subscribers') }}:</h4> 
         <h4 class="d-inline-block align-top" id="subscription_count">{{ $subscription_count }}</h4>
     </div>
     
     @auth
         @if (auth()->id() != $user->id)
             @if (App\Subscription::where('subscriber_id', auth()->id())->where('author_id', $user->id)->exists())
-                <button id="subscribe" class='btn btn-secondary d-inline-block'>Unsubscribe</button>
+                <button id="subscribe" class='btn btn-secondary d-inline-block'>{{ __('messages.Unsubscribe') }}</button>
             @else
-                <button id="subscribe" class='btn btn-primary d-inline-block'>Subscribe</button>
+                <button id="subscribe" class='btn btn-primary d-inline-block'>{{ __('messages.Subscribe') }}</button>
             @endif
         @endif
     @endauth

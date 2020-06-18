@@ -23,11 +23,13 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->except(['show']);
-        $this->middleware('BlockedUser');
+        $this->middleware('admin')->only(['index']);
+        $this->middleware('notBlockedUser');
     }
     public function index()
     {
-        //
+        $users = User::all();
+        return view('user.index', ['users'=>$users]);
     }
 
     /**
@@ -99,7 +101,8 @@ class UserController extends Controller
             $rules = [
                 'name' => 'required|string|min:1|max:100',
                 'avatar' => 'image|mimes:jpeg,png,jpg',
-                'blocked' => 'integer|min:0|max:1'
+                'blocked' => 'integer|min:0|max:1',
+                'personalisation' => 'required|integer|min:0|max:1'
             ];
 
             $this->validate($request, $rules);
@@ -107,6 +110,7 @@ class UserController extends Controller
             $user = User::find($id);
 
             $user->name = $request->name;
+            $user->personalisation = $request->personalisation;
             if ($request->exists('avatar')) {
                 $avatar = $request->file('avatar');
                 $avatar->move('uploads/avatars/', $id.'.'.$avatar->getClientOriginalExtension());

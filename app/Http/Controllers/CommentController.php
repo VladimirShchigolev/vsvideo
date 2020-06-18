@@ -20,8 +20,8 @@ class CommentController extends Controller
     
     public function __construct()
     {
-        $this->middleware('auth')->except(['index']);
-        $this->middleware('BlockedUser');
+        $this->middleware('admin')->only(['index', 'create']);
+        $this->middleware('notBlockedUser');
     }
     
     public function index($id)
@@ -50,7 +50,7 @@ class CommentController extends Controller
     {
         $rules = [
             'text' => 'required|string|min:1|max:1200',
-            'video_id' => 'required|exists:Video,id'
+            'video_id' => 'required|exists:App\Video,id'
         ];
         
         $this->validate($request, $rules);
@@ -133,7 +133,7 @@ class CommentController extends Controller
     public function delete($id)
     {
         $comment = Comment::findorFail($id);
-        if (auth()->id() == $comment->owner_id || auth()->user()->isAdmin) {
+        if (auth()->id() == $comment->owner_id || auth()->id() == $comment->video->owner_id || auth()->user()->isAdmin) {
             return view('comment.delete', ['comment'=>$comment]);
         } else {
             abort(404);
@@ -144,7 +144,7 @@ class CommentController extends Controller
     {
         $comment = Comment::findOrFail($id);
         $video_id = $comment->video_id;
-        if (auth()->id() == $comment->owner_id || auth()->user()->isAdmin) {
+        if (auth()->id() == $comment->owner_id || auth()->id() == $comment->video->owner_id || auth()->user()->isAdmin) {
             $comment->delete();
             return redirect('/videos/'.$video_id);
         } else {

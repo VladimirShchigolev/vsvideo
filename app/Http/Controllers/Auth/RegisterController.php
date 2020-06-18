@@ -68,9 +68,6 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'isAdmin' => false,
-            'isBlocked' => false,
-            'avatarPath' => '/uploads/avatars/0.png'
         ]);
     }
 }
