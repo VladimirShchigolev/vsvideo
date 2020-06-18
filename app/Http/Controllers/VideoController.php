@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Comment;
 use App\Like;
 use App\Subscription;
-use App\Video;
 use App\User;
+use App\Video;
+use File;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use function abort;
@@ -19,8 +20,8 @@ class VideoController extends Controller
     
     public function __construct()
     {
-        $this->middleware('auth')->except(['index', 'show']);
-        $this->middleware('BlockedUser');
+        $this->middleware('auth')->except(['index', 'show', 'search']);
+        $this->middleware('notBlockedUser');
     }
     /**
      * Display a listing of the resource.
@@ -29,10 +30,27 @@ class VideoController extends Controller
      */
     public function index()
     {
-        if (auth()->check() && auth()->user()->isAdmin) {
-            $videos = Video::orderBy('uploadDate', 'desc')->get();
-        } else {
+        if (! auth()->check()) {
             $videos = Video::where('public', true)->orderBy('uploadDate', 'desc')->get();
+        }
+        else if (auth()->check()) {
+            if (auth()->user()->personalisation == 0) {
+                $query = Video::orderBy('uploadDate', 'desc');
+                if (! auth()->user()->isAdmin) {
+                    $videos = $query->where('public', true)->get();
+                }
+            }
+            else {
+                $query = Video::leftJoin(\DB::raw('(Select * From subscriptions where subscriber_id ='.auth()->id().') S'), 'S.author_id', '=', 'videos.owner_id');
+                //dd($query->get());
+                if (! auth()->user()->isAdmin) {
+                    $query = $query->where('public', true);
+                }
+                $videos = $query->orderBy(\DB::raw('ISNULL(S.author_id), S.author_id'), 'ASC')
+                        ->orderBy('uploadDate', 'desc')->groupBy('videos.id')->get(['videos.*']);
+              
+                //dd($videos);
+            }
         }
         //dd($videos);
         return view('video.index', ['videos' => $videos]);
@@ -60,7 +78,7 @@ class VideoController extends Controller
             'title' => 'required|string|min:3|max:200',
             'video' => 'required|mimes:mp4',
             'thumbnail' => 'image|mimes:jpeg,png,jpg',
-            'description' => 'string|max:1200',
+            'description' => 'nullable|string|max:1200',
             'public' => 'required|integer|min:0|max:1'
         ];
         
@@ -74,7 +92,6 @@ class VideoController extends Controller
             $data['description'] = "";
         }
         $data['public'] = boolval($request['public']);
-        $data['blocked'] = false;
         $data['uploadDate'] = date('Y-m-d H:i:s');
         $data['owner_id'] = auth()->id();
         $data['path'] = '';
@@ -83,17 +100,14 @@ class VideoController extends Controller
         $video = Video::create($data);
         $video->save();
         
-        $id = $video->id;
-        $video = Video::find($id);
-        
         $file = $request->file('video');
-        $file->move('uploads/videos/', $id.'.mp4');
-        $video->path = '/uploads/videos/'.$id.'.mp4';
+        $file->move('uploads/videos/', $video->id.'.mp4');
+        $video->path = '/uploads/videos/'.$video->id.'.mp4';
         
         if ($request->exists('thumbnail')) {
             $thumbnail = $request->file('thumbnail');
-            $thumbnail->move('uploads/thumbnails/', $id.'.'.$thumbnail->getClientOriginalExtension());
-            $video->thumbnailPath = '/uploads/thumbnails/'.$id.'.'.$thumbnail->getClientOriginalExtension();
+            $thumbnail->move('uploads/thumbnails/', $video->id.'.'.$thumbnail->getClientOriginalExtension());
+            $video->thumbnailPath = '/uploads/thumbnails/'.$video->id.'.'.$thumbnail->getClientOriginalExtension();
         }
         
         $video->save();
@@ -143,7 +157,7 @@ class VideoController extends Controller
         $rules = [
             'title' => 'required|string|min:3|max:200',
             'thumbnail' => 'image|mimes:jpeg,png,jpg',
-            'description' => 'string|max:1200',
+            'description' => 'nullable|string|max:1200',
             'public' => 'required|integer|min:0|max:1',
             'blocked' => 'integer|min:0|max:1'
         ];
@@ -169,6 +183,11 @@ class VideoController extends Controller
             }
 
             if ($request->exists('thumbnail')) {
+                $old_thumbnail = substr($video->thumbnailPath, 1);
+                if ($old_thumbnail != 'uploads/thumbnails/0.jpg') {
+                    File::delete($old_thumbnail);
+                }
+                
                 $thumbnail = $request->file('thumbnail');
                 $thumbnail->move('uploads/thumbnails/', $id.'.'.$thumbnail->getClientOriginalExtension());
                 $video->thumbnailPath = '/uploads/thumbnails/'.$id.'.'.$thumbnail->getClientOriginalExtension();
@@ -207,5 +226,28 @@ class VideoController extends Controller
         } else {
             abort(404);
         }
+    }
+    
+    
+    public function search(Request $request)
+    {
+        $rules = [
+            'search' => 'required|string|max:1200'
+        ];
+        
+        $this->validate($request, $rules);
+
+        $query = Video::join('users', 'users.id', '=', 'videos.owner_id')
+                ->where('users.name', 'LIKE', '%'.$request->get('search').'%')
+                ->orWhere('videos.title', 'LIKE', '%'.$request->get('search').'%')
+                ->orWhere('videos.description', 'LIKE', '%'.$request->get('search').'%');
+        
+        if (auth()->check() && auth()->user()->isAdmin) {
+            $videos = $query->orderBy('uploadDate', 'desc')->get(['videos.*']);
+        } else {
+            $videos = $query->where('public', true)->orderBy('uploadDate', 'desc')->get(['videos.*']);
+        }
+        //dd($videos);
+        return view('video.index', ['videos' => $videos]);
     }
 }

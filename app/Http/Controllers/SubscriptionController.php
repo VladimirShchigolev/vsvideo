@@ -20,7 +20,7 @@ class SubscriptionController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('BlockedUser');
+        $this->middleware('notBlockedUser');
     }
     
     public function index()
@@ -47,8 +47,8 @@ class SubscriptionController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'subscriber_id' => 'required|exists:User,id',
-            'author_id' => 'required|exists:User,id'
+            'subscriber_id' => 'required|exists:App\User,id',
+            'author_id' => 'required|exists:App\User,id'
         ];
 
         $this->validate($request, $rules);
@@ -111,8 +111,8 @@ class SubscriptionController extends Controller
     public function destroy(Request $request)
     {
         $rules = [
-            'subscriber_id' => 'required|exists:User,id',
-            'author_id' => 'required|exists:User,id'
+            'subscriber_id' => 'required|exists:App\User,id',
+            'author_id' => 'required|exists:App\User,id'
         ];
 
         $this->validate($request, $rules);

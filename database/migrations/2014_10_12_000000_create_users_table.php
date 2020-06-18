@@ -21,9 +21,10 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
-            $table->boolean('isAdmin');
-            $table->boolean('isBlocked');
-            $table->string('avatarPath', 100);
+            $table->boolean('isAdmin')->default(false);
+            $table->boolean('isBlocked')->default(false);
+            $table->string('avatarPath', 100)->default('/uploads/avatars/0.png');
+            $table->integer('personalisation')->default(0);
         });
     }
 

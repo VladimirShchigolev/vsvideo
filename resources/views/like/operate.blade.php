@@ -9,7 +9,7 @@ $(document).ready(function () {
             url: url,
             data: { owner_id: {{ auth()->id() }}, video_id: {{ $video_id }}, _token: CSRF_TOKEN },
             success: function (data) {
-                $("#like.btn-primary").text("Dislike");
+                $("#like.btn-primary").text("{{ __('messages.Dislike') }}");
                 $("#like.btn-primary").toggleClass("btn-primary btn-secondary"); 
                 like_count = Number($("#like_count").text());
                 $("#like_count").text((like_count+1).toString(10));
@@ -27,7 +27,7 @@ $(document).ready(function () {
             url: url,
             data: { owner_id: {{ auth()->id() }}, video_id: {{ $video_id }}, _token: CSRF_TOKEN },
             success: function (data) {
-                $("#like.btn-secondary").text("Like");
+                $("#like.btn-secondary").text("{{ __('messages.Like') }}");
                 $("#like.btn-secondary").toggleClass("btn-primary btn-secondary"); 
                 like_count = Number($("#like_count").text());
                 $("#like_count").text((like_count-1).toString(10));
@@ -43,15 +43,15 @@ $(document).ready(function () {
 
 <div class="container">
     <div class="d-inline-block my-1 mr-2">
-        <h4 class="d-inline-block align-top">Likes:</h4> 
+        <h4 class="d-inline-block align-top">{{ __('messages.Likes') }}:</h4> 
         <h4 class="d-inline-block align-top" id="like_count">{{ $like_count }}</h4>
     </div>
     
     @auth
         @if (App\Like::where('owner_id', auth()->id())->where('video_id', $video_id)->exists())
-            <button id="like" class='btn btn-secondary d-inline-block'>Dislike</button>
+            <button id="like" class='btn btn-secondary d-inline-block'>{{ __('messages.Dislike') }}</button>
         @else
-            <button id="like" class='btn btn-primary d-inline-block'>Like</button>
+            <button id="like" class='btn btn-primary d-inline-block'>{{ __('messages.Like') }}</button>
         @endif
     @endauth
 </div>

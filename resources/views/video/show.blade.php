@@ -7,10 +7,10 @@
             @auth
                 @if (Auth::user()->id == $video->owner_id || auth()->user()->isAdmin)
                     <a href = "{{ action('VideoController@edit', $video_id) }}">
-                        <button class="btn btn-primary float-right mr-4">Edit video details</button>
+                        <button class="btn btn-primary float-right mr-4">{{ __('messages.Edit_video_details') }}</button>
                     </a>
                     <a href = "{{ action('VideoController@delete', $video_id) }}">
-                        <button class="btn btn-primary float-right mx-4">Delete the video</button>
+                        <button class="btn btn-primary float-right mx-4">{{ __('messages.Delete_the_video') }}</button>
                     </a>
                 @endif
             @endauth
@@ -20,10 +20,10 @@
         @if (!$video->blocked)
         <video width="1280" height="720" controls class="my-3">
             <source src="{{ $video->path }}" type="video/mp4">
-             Your browser does not support the video tag.
+             {{ __('messages.Your_browser_does_not_support_the_video_tag') }}
          </video>
         @else
-        <h1 class="text-danger">This video is blocked</h1>
+        <h1 class="text-danger">{{ __('messages.This_video_is_blocked') }}</h1>
         @endif
         
         
@@ -37,20 +37,16 @@
         
         <div style="height: 64px">
             <a href="{{ action('UserController@show', $video->owner_id) }}">
-                <img class="rounded-circle float-left mx-3" src="{{ $video->owner->avatarPath }}" alt="Avatar unavailable" width="64" height="64">
+                <img class="rounded-circle float-left mx-3" src="{{ $video->owner->avatarPath }}" alt="{{ __('messages.Avatar_unavailable') }}" width="64" height="64">
             </a>
             <a href="{{ action('UserController@show', $video->owner_id) }}">
                 <h1 class="mt-1 d-inline">{{ $video->owner->name }} </h1>
             </a>
         </div>
-
-
-        
-           
         
         <hr>
         
-        <h3>Description</h3>
+        <h3>{{ __('messages.Description') }}</h3>
         <p> {{ $video->description }} </p>
     </div>
     <hr>
