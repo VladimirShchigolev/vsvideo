@@ -59,9 +59,9 @@
         </div>
         <input class="btn btn-primary col-sm my-2" type="submit" value="{{ __('messages.Save_changes') }}" name="submit">
     </form>
-        <a href = "{{ action('VideoController@show', $video->id) }}">
-            <button class="btn btn-secondary col-sm my-1">{{ __('messages.Cancel') }}</button>
-        </a>
+    <form style="display: inline" action="{{ action('VideoController@show', $video->id) }}" method="get">
+        <button class="btn btn-secondary col-sm my-1">{{ __('messages.Cancel') }}</button>
+    </form>
     
 </div>
 @endsection

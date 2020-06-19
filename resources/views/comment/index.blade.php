@@ -13,17 +13,21 @@
                         </td>
                         <td class="container pt-3">
                             <div class="float-right d-inline-block">
+                            @auth
                             @if (Auth::user()->id == $comment->owner_id || Auth::user()->id == $video->owner_id || auth()->user()->isAdmin)
                                 @if (Auth::user()->id == $comment->owner_id || auth()->user()->isAdmin)
-                                <a href = "{{ action('CommentController@edit', $comment->id) }}">
+                                <form style="display: inline" action="{{ action('CommentController@edit', $comment->id) }}" method="get">
                                     <button class="btn btn-primary mb-1 float-right">{{ __('messages.Edit_the_comment') }}</button>
-                                </a>
+                                </form>
+                                
                                 @endif
                             <br>
-                                <a href = "{{ action('CommentController@delete', $comment->id) }}">
+                                <form style="display: inline" action="{{ action('CommentController@delete', $comment->id) }}" method="get">
                                     <button class="btn btn-primary mt-1 float-right">{{ __('messages.Delete_the_comment') }}</button>
-                                </a>
+                                </form>
+                                
                             @endif
+                            @endauth
                             </div>
                             <div class="wrapper">
                                 <a href="{{ action('UserController@show', $comment->owner_id) }}">

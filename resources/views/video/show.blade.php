@@ -6,12 +6,13 @@
         <div>
             @auth
                 @if (Auth::user()->id == $video->owner_id || auth()->user()->isAdmin)
-                    <a href = "{{ action('VideoController@edit', $video_id) }}">
+                    <form style="display: inline" action="{{ action('VideoController@edit', $video_id) }}" method="get">
                         <button class="btn btn-primary float-right mr-4">{{ __('messages.Edit_video_details') }}</button>
-                    </a>
-                    <a href = "{{ action('VideoController@delete', $video_id) }}">
+                    </form>
+                    <form style="display: inline" action="{{ action('VideoController@delete', $video_id) }}" method="get">
                         <button class="btn btn-primary float-right mx-4">{{ __('messages.Delete_the_video') }}</button>
-                    </a>
+                    </form>
+                    
                 @endif
             @endauth
             <h1> {{ $video->title }} </h1>

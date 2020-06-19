@@ -3,11 +3,13 @@
 @section('content')
 <div class="col-9 my-3">
     <h1>{{ __('messages.Deleting') }} "{{ $video->title }}"</h1>
-    <a href = "{{ action('VideoController@destroy', $video->id) }}">
+    <form style="display: inline" action="{{ action('VideoController@destroy', $video->id) }}" method="get">
         <button class="btn btn-danger col-sm my-1">{{ __('messages.Confirm') }}</button>
-    </a>
-    <a href = "{{ action('VideoController@show', $video->id) }}">
+    </form>
+    
+    <form style="display: inline" action="{{ action('VideoController@show', $video->id) }}" method="get">
         <button class="btn btn-secondary col-sm my-1">{{ __('messages.Cancel') }}</button>
-    </a>
+    </form>
+    
 </div>
 @endsection

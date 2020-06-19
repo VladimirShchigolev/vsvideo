@@ -27,9 +27,9 @@
         </div>
     <input class="btn btn-primary col-sm my-1" type="submit" value="{{ __('messages.Save_changes') }}" name="submit">
     </form>
-    <a href = "{{ action('VideoController@show', $comment->video_id) }}">
+    <form style="display: inline" action="{{ action('VideoController@show', $comment->video_id) }}" method="get">
         <button class="btn btn-secondary col-sm my-1">{{ __('messages.Cancel') }}</button>
-    </a>
+    </form>
     
     @else
     <h5>{{ __('messages.Log_in_to_leave_a_comment') }}</h5>

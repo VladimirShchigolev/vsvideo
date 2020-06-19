@@ -61,7 +61,7 @@ return [
     'Your_browser_does_not_support_the_video_tag' => 'Jūsu pārlūkprogramma neatbalsta video tegu',
     'This_video_is_blocked' => 'Šis video ir bloķēts',
     'Dashboard' => 'Informācijas panelis',
-    'Hello_and_welcome_to_the' => 'Sveiki un liapni gaidīti',
+    'Hello_and_welcome_to_the' => 'Sveiki un laipni gaidīti',
     'Access_denied_to_ADMIN_functionality!' => 'Piekļuve noliegta neadministratoriem',
     'This_Account_is_blocked_by_the_site_administration' => 'Šis konts tika bloķēts',
 ];

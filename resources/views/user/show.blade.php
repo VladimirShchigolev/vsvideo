@@ -13,9 +13,10 @@
                 <h1> {{ $user->name }} </h1>
                 @auth
                     @if (Auth::user()->id == $user->id || auth()->user()->isAdmin)
-                        <a href = "{{ action('UserController@edit', $user->id) }}">
+                        <form style="display: inline" action="{{ action('UserController@edit', $user->id) }}" method="get">
                             <button class="btn btn-primary">{{ __('messages.Edit_Profile') }}</button>
-                        </a>
+                        </form>
+                        
                     @endif
                 @endauth
             </div>
@@ -26,9 +27,10 @@
             <div class="ml-5">
                 @auth
                     @if (Auth::user()->id == $user->id)
-                        <a href = "{{ action('VideoController@create', $user->id) }}">
+                        <form style="display: inline" action="{{ action('VideoController@create', $user->id) }}" method="get">
                             <button class="btn btn-primary float-right">{{ __('messages.Upload_a_video') }}</button>
-                        </a>
+                        </form>
+                        
                     @endif
                 @endauth
                 <h2>{{ $user->name }} {{ __('messages.videos') }}</h2>

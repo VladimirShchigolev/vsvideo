@@ -22,6 +22,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('videos', 'VideoController', ['only' => ['index', 'create', 'edit', 'update', 'store', 'show']]);
 Route::get('/videos/delete/{id}', 'VideoController@delete');
 Route::get('/videos/destroy/{id}', 'VideoController@destroy');
+Route::post('/videos/search', 'VideoController@search');
 
 Route::get('/', 'VideoController@index');
 
@@ -52,3 +53,6 @@ Route::post('/likes/destroy', 'LikeController@destroy');
 
 Route::post('/subscriptions', 'SubscriptionController@store');
 Route::post('/subscriptions/destroy', 'SubscriptionController@destroy');
+
+Route::get('lang/{locale}','LanguageController');
+
