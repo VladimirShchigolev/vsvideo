@@ -37,8 +37,9 @@ class VideoController extends Controller
             if (auth()->user()->personalisation == 0) {
                 $query = Video::orderBy('uploadDate', 'desc');
                 if (! auth()->user()->isAdmin) {
-                    $videos = $query->where('public', true)->get();
+                    $videos = $query->where('public', true);
                 }
+                $videos = $query->get();
             }
             else {
                 $query = Video::leftJoin(\DB::raw('(Select * From subscriptions where subscriber_id ='.auth()->id().') S'), 'S.author_id', '=', 'videos.owner_id');

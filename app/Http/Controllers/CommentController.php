@@ -26,8 +26,9 @@ class CommentController extends Controller
     
     public function index($id)
     {
-        $comments = Comment::where('video', $id);
-        return view('comment.index', [compact($comments)]);
+        abort(404);
+        //$comments = Comment::where('video_id', $id)->get();
+        //return view('comment.index', ['comments'=>$comments]);
     }
 
     /**
@@ -37,7 +38,8 @@ class CommentController extends Controller
      */
     public function create($id)
     {
-        return view('comment.create', ['video_id'=>$id]);
+        abort(404);
+        //return view('comment.create', ['video_id'=>$id]);
     }
 
     /**

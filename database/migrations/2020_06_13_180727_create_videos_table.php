@@ -22,7 +22,7 @@ class CreateVideosTable extends Migration
             $table->string('title', 100);
             $table->text('description');
             $table->boolean('public');
-            $table->boolean('blocked');
+            $table->boolean('blocked')->default(false);
             $table->dateTime('uploadDate');
         });
     }
